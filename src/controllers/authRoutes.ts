@@ -16,7 +16,7 @@ async function signUp(req: Request, res: Response) {
 
     await authService.createUser(email, password);
 
-    res.sendStatus(201);
+    res.status(201).send("Successfully created user");
 }
 
 export { signIn, signUp };

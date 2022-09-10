@@ -1,15 +1,11 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "commonjs",
-        "moduleResolution": "Node",
-        "sourceMap": true,
-        "strict": true,
-        "lib": ["esnext"],
-        "outDir": "dist",
-        "esModuleInterop": true
-      },
-      "ts-node": {
-        "esm": true
-      }
+  "compilerOptions": {
+      "target": "es2016",
+      "module": "commonjs",
+      "outDir": "./dist",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true,
+      "strict": true
   }
+}

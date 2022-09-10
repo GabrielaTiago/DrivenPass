@@ -1,4 +1,4 @@
-import { ErrorsTypes } from "../types/erros";
+import { ErrorsTypes } from "../types/errors";
 
 export interface IErrors extends Error {
     type : ErrorsTypes;
