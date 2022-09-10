@@ -2,7 +2,7 @@ import { ISchemas } from "../interfaces/schemasInterface";
 import { authSchema } from "./authSchema";
 
 const schemas: ISchemas = {
-    "user": authSchema
+    "auth": authSchema
 };
 
 export { schemas };
