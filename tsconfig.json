@@ -2,9 +2,12 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "esModuleInterop": true,
         "moduleResolution": "Node",
-        "outDir": "dist"
+        "sourceMap": true,
+        "strict": true,
+        "lib": ["esnext"],
+        "outDir": "dist",
+        "esModuleInterop": true
       },
       "ts-node": {
         "esm": true
