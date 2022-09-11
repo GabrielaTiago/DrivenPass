@@ -20,8 +20,12 @@ async function  getUserCredentials(req: Request, res: Response) {
 }
 
 async function getCredentialById(req: Request, res: Response) {
+    const userId: number = Number(res.locals.userId);
     const credentialId: number = Number(req.params.id);
-    res.status(200).send();
+
+    const specificCredential = await credentialsServices.getCredendtialById(userId, credentialId);
+
+    res.status(200).send(specificCredential);
 }
 
 async function deleteCredentials(req: Request, res: Response) {

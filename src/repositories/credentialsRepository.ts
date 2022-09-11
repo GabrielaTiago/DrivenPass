@@ -25,4 +25,11 @@ async function getUserCredentials(userId: number) {
     return resultCredentials;
 }
 
-export { createCredential, findMoreThanOneTitle, getUserCredentials };
+async function getCredendtialById(userId: number, credentialId: number) {
+    const credential = await database.credential.findFirst({
+        where: { userId, id: credentialId }
+    });
+    return credential;
+}
+
+export { createCredential, findMoreThanOneTitle, getUserCredentials, getCredendtialById };

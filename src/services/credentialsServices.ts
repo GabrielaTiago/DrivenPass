@@ -1,5 +1,5 @@
 import { credentialData } from "../types/credentialType";
-import { encryptsPassword } from "../utils/passwordEncryption";
+import { decryptsPassword, encryptsPassword } from "../utils/passwordEncryption";
 
 import * as credentialRepository from "../repositories/credentialsRepository"; 
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
@@ -20,4 +20,18 @@ async function getUserCredentials(userId: number) {
     return await credentialRepository.getUserCredentials(userId);
 }
 
-export { createCredential, getUserCredentials };
+async function getCredendtialById(userId: number, credentialId: number) {
+    const specificCredential = await credentialRepository.getCredendtialById(userId, credentialId);
+
+    if (!specificCredential) {
+        throw throwErrorMessage("not_found", "It seems that this credential doesn't exist yet");
+    }
+
+    if (specificCredential.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to see this credential");
+    }
+
+    return specificCredential;
+}
+
+export { createCredential, getUserCredentials, getCredendtialById };
