@@ -8,6 +8,6 @@ const noteRouter = Router();
 noteRouter.post("/notes", validateSchemas("note"), validatetoken, createNote);
 noteRouter.get("/notes/all", validatetoken, getUserNotes);
 noteRouter.get("/notes/:id", validatetoken,getNoteById);
-noteRouter.delete("/notes/:id/delete", deleteNote);
+noteRouter.delete("/notes/:id/delete", validatetoken, deleteNote);
 
 export { noteRouter };

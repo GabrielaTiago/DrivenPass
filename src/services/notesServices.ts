@@ -33,4 +33,15 @@ export async function getNoteById(userId: number, noteId: number) {
 }
 
 export async function deleteNote(userId: number, noteId: number) {
+    const noteForDeletion = await notesRepository.getNoteById(userId, noteId);
+
+    if (!noteForDeletion) {
+        throw throwErrorMessage("not_found", "It seems that this note doesn't exists");
+    }
+
+    if (noteForDeletion.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to delete this note");
+    }
+
+    await notesRepository.deleteNote(noteId);
 }

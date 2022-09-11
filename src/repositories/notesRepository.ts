@@ -33,4 +33,8 @@ export async function getNoteById(userId: number, noteId: number) {
 }
 
 export async function deleteNote(noteId: number) {
+    const noteForDeletion = await database.note.delete({
+        where: { id: noteId }
+    });
+    return noteForDeletion;
 }
