@@ -7,7 +7,7 @@ const noteRouter = Router();
 
 noteRouter.post("/notes", validateSchemas("note"), validatetoken, createNote);
 noteRouter.get("/notes/all", validatetoken, getUserNotes);
-noteRouter.get("/notes/:id", getNoteById);
+noteRouter.get("/notes/:id", validatetoken,getNoteById);
 noteRouter.delete("/notes/:id/delete", deleteNote);
 
 export { noteRouter };

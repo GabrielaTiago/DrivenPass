@@ -19,6 +19,17 @@ export async function getUserNotes(userId: number) {
 }
 
 export async function getNoteById(userId: number, noteId: number) {
+    const specificNote = await notesRepository.getNoteById(userId, noteId);
+
+    if (!specificNote) {
+        throw throwErrorMessage("not_found", "It seems that this note doesn't exist yet");
+    }
+
+    if (specificNote.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to see this note");
+    }
+
+    return specificNote;
 }
 
 export async function deleteNote(userId: number, noteId: number) {

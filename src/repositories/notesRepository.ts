@@ -26,7 +26,10 @@ export async function getUserNotes(userId: number) {
 }
 
 export async function getNoteById(userId: number, noteId: number) {
-
+    const specificNote = await database.note.findFirst({
+        where: { userId, id: noteId }
+    });
+    return specificNote;
 }
 
 export async function deleteNote(noteId: number) {
