@@ -19,6 +19,10 @@ export async function createNote(note: noteData) {
 }
 
 export async function getUserNotes(userId: number) {
+    const resultNotes = await database.note.findMany({
+        where: { userId }
+    });
+    return resultNotes
 }
 
 export async function getNoteById(userId: number, noteId: number) {

@@ -15,6 +15,7 @@ export async function createNote(note: noteData) {
 }
 
 export async function getUserNotes(userId: number) {
+    return await notesRepository.getUserNotes(userId);
 }
 
 export async function getNoteById(userId: number, noteId: number) {

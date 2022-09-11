@@ -6,7 +6,7 @@ import { validatetoken } from "../middlewares/validateTokenMiddleware";
 const noteRouter = Router();
 
 noteRouter.post("/notes", validateSchemas("note"), validatetoken, createNote);
-noteRouter.get("/notes/all", getUserNotes);
+noteRouter.get("/notes/all", validatetoken, getUserNotes);
 noteRouter.get("/notes/:id", getNoteById);
 noteRouter.delete("/notes/:id/delete", deleteNote);
 
