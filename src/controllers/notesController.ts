@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
 
+import * as notesServices from "../services/notesServices";
+
 export async function createNote(req: Request, res: Response) {
     const { userId } = res.locals;
     const { title, text } = req.body;
 
-    res.status(201).send("Successfully created the credential!");
+    await notesServices.createNote({ userId, title, text });
+    
+    res.status(201).send("Successfully created the note!");
 }
 
 export async function  getUserNotes(req: Request, res: Response) {
@@ -24,5 +28,5 @@ export async function deleteNote(req: Request, res: Response) {
     const userId: number = Number(res.locals.userId);
     const NoteId: number = Number(req.params.id);
 
-    res.status(200).send("Successfully deleted the credential!");
+    res.status(200).send("Successfully deleted the note!");
 }

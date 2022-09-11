@@ -1,5 +1,17 @@
+import { noteData } from "../types/noteType";
+import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
 
-export async function createNote() {
+import * as notesRepository from "../repositories/notesRepository"; 
+
+export async function createNote(note: noteData) {
+    const { userId, title, text } = note;
+    const moreThanOneTitle = await notesRepository.findMoreThanOneTitle(userId, title);
+
+    if (moreThanOneTitle) {
+        throw throwErrorMessage("conflict", "You already have a credential with this title");
+    }
+
+    await notesRepository.createNote({ userId, title, text });
 }
 
 export async function getUserNotes(userId: number) {
