@@ -16,4 +16,8 @@ async function createCredential(credential: credentialData) {
     await credentialRepository.createCredential({ userId, title, url, username, password: encryptedPassword });
 }
 
-export { createCredential };
+async function getUserCredentials(userId: number) {
+    return await credentialRepository.getUserCredentials(userId);
+}
+
+export { createCredential, getUserCredentials };

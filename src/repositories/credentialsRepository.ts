@@ -18,4 +18,11 @@ async function createCredential(credential: credentialData) {
     });
 }
 
-export { createCredential, findMoreThanOneTitle };
+async function getUserCredentials(userId: number) {
+    const resultCredentials = await database.credential.findMany({
+        where: { userId }
+    });
+    return resultCredentials;
+}
+
+export { createCredential, findMoreThanOneTitle, getUserCredentials };

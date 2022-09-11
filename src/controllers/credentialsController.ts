@@ -7,12 +7,16 @@ async function createCredential(req: Request, res: Response) {
     const { title, url, username, password } = req.body;
 
     await credentialsServices.createCredential({ userId, title, url, username, password });
-    
+
     res.status(201).send("Successfully created the credential");
 }
 
-async function  getAllCredentials(req: Request, res: Response) {
-    res.status(200).send();
+async function  getUserCredentials(req: Request, res: Response) {
+    const userId = Number(res.locals.userId);
+
+    const userCredentials = await credentialsServices.getUserCredentials(userId);
+    
+    res.status(200).send(userCredentials);
 }
 
 async function getCredentialById(req: Request, res: Response) {
@@ -25,4 +29,4 @@ async function deleteCredentials(req: Request, res: Response) {
     res.status(200).send();
 }
 
-export { createCredential,deleteCredentials, getAllCredentials, getCredentialById};
+export { createCredential,deleteCredentials, getUserCredentials, getCredentialById};
