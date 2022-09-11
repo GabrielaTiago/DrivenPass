@@ -1,5 +1,5 @@
 import { credentialData } from "../types/credentialType";
-import { comparePassword, encryptsPassword } from "../utils/passwordEncryption";
+import { cryptographsGeneralPasswords } from "../utils/passwordEncryption";
 
 import * as credentialRepository from "../repositories/credentialsRepository"; 
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
@@ -12,7 +12,7 @@ async function createCredential(credential: credentialData) {
         throw throwErrorMessage("conflict", "You already have a credential with this title");
     }
 
-    const encryptedPassword = encryptsPassword(password);
+    const encryptedPassword = cryptographsGeneralPasswords(password);
     await credentialRepository.createCredential({ userId, title, url, username, password: encryptedPassword });
 }
 
