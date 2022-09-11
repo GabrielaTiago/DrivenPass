@@ -1,6 +1,5 @@
 
 import bcrypt from "bcrypt";
-import Cryptr from "cryptr";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -10,7 +9,7 @@ export function encryptsPassword(password: string) {
     return encryptedPassword;
 }
 
-export function decryptsPassword(password:string, encryptedPassword: string ) {
-    const decryptedPassword: boolean = bcrypt.compareSync(password, encryptedPassword);
-    return decryptedPassword;
+export function comparePassword(password:string, encryptedPassword: string ) {
+    const compareHash: boolean = bcrypt.compareSync(password, encryptedPassword);
+    return compareHash;
 }

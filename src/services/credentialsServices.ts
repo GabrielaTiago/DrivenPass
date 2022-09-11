@@ -1,5 +1,5 @@
 import { credentialData } from "../types/credentialType";
-import { decryptsPassword, encryptsPassword } from "../utils/passwordEncryption";
+import { comparePassword, encryptsPassword } from "../utils/passwordEncryption";
 
 import * as credentialRepository from "../repositories/credentialsRepository"; 
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
-import { decryptsPassword, encryptsPassword } from "../utils/passwordEncryption";
+import { comparePassword, encryptsPassword } from "../utils/passwordEncryption";
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ async function login(email: string, password: string) {
     const validEmail = userData?.email;
     const validPassword = userData?.password as string;
     
-    if(!validEmail || !decryptsPassword(password, validPassword)){
+    if(!validEmail || !comparePassword(password, validPassword)){
         throw throwErrorMessage("unauthorized", "Incorrect email and/or password");
     }
 
