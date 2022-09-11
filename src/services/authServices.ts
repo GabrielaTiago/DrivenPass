@@ -1,7 +1,12 @@
 import * as authRepository from "../repositories/authRepository";
 
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
-import { encryptsPassword } from "../utils/passwordEncryption";
+import { decryptsPassword, encryptsPassword } from "../utils/passwordEncryption";
+
+dotenv.config();
 
 async function createUser(email: string, password: string) {
     const emailExists = await authRepository.findUserEmail(email);
@@ -16,7 +21,21 @@ async function createUser(email: string, password: string) {
 }
 
 async function login(email: string, password: string) {
+    const userData = await authRepository.findUserEmail(email);
+    const validEmail = userData?.email;
+    const validPassword = userData?.password as string;
+    
+    if(!validEmail || !decryptsPassword(password, validPassword)){
+        throw throwErrorMessage("unauthorized", "Incorrect email and/or password");
+    }
 
+    const token = jwt.sign(
+        { id: userData.id },
+        process.env.JWT_SECRET as string, 
+        { expiresIn: "4h" }
+    );
+    
+    return token;
 }
 
 export { createUser, login };

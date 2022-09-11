@@ -4,7 +4,7 @@ import { validateSchemas } from "../middlewares/validateSchemasMiddleware";
 
 const authRouter = Router();
 
-authRouter.get("/", signIn);
+authRouter.post("/", validateSchemas("auth"), signIn);
 authRouter.post("/sign-up", validateSchemas("auth"), signUp);
 
 export { authRouter };

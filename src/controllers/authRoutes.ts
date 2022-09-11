@@ -6,9 +6,9 @@ import * as authService from "../services/authServices";
 async function signIn(req: Request, res: Response) {
     const { email, password } : authInterface.IAuthBodyData = req.body;
     
-    await authService.login(email, password);
-    
-    res.sendStatus(200);
+    const token = await authService.login(email, password);
+
+    res.status(200).send({token: token, message: "Authentication Success"});
 }
 
 async function signUp(req: Request, res: Response) {

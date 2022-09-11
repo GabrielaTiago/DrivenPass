@@ -7,3 +7,8 @@ export function encryptsPassword(password: string) {
     const encryptedPassword: string = bcrypt.hashSync(password, salt);
     return encryptedPassword;
 }
+
+export function decryptsPassword(password:string, encryptedPassword: string ) {
+    const decryptedPassword: boolean = bcrypt.compareSync(password, encryptedPassword);
+    return decryptedPassword;
+}
