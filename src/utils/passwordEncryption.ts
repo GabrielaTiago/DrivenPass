@@ -22,3 +22,8 @@ export function cryptographsGeneralPasswords(password: string){
     const crypts = cryptr.encrypt(password);
     return crypts;
 }
+
+export function decryptsPassword(password: string){
+    const decrypts = cryptr.decrypt(password);
+    return decrypts;
+}

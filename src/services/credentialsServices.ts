@@ -1,8 +1,8 @@
 import { credentialData } from "../types/credentialType";
-import { cryptographsGeneralPasswords } from "../utils/passwordEncryption";
+import { cryptographsGeneralPasswords, decryptsPassword } from "../utils/passwordEncryption";
+import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
 
 import * as credentialRepository from "../repositories/credentialsRepository"; 
-import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
 
 async function createCredential(credential: credentialData) {
     const { userId, title, url, username, password } = credential;
@@ -17,7 +17,20 @@ async function createCredential(credential: credentialData) {
 }
 
 async function getUserCredentials(userId: number) {
-    return await credentialRepository.getUserCredentials(userId);
+    const allUserCredentials = await credentialRepository.getUserCredentials(userId);
+
+    if (!allUserCredentials) {
+        throw throwErrorMessage("not_found", "No credentials were found");
+    }
+
+    const decryptedCredentials = allUserCredentials.map((credential) => {
+        return {
+            ...credential,
+            password: decryptsPassword(credential.password)
+        }
+    });
+
+    return decryptedCredentials;
 }
 
 async function getCredendtialById(userId: number, credentialId: number) {
@@ -31,7 +44,9 @@ async function getCredendtialById(userId: number, credentialId: number) {
         throw throwErrorMessage("forbidden", "You don't have the permition to see this credential");
     }
 
-    return specificCredential;
+    const decryptedPassword = decryptsPassword(specificCredential.password);
+    const decryptedCredential = { ...specificCredential, password: decryptedPassword }
+    return decryptedCredential;
 }
 
 export { createCredential, getUserCredentials, getCredendtialById };
