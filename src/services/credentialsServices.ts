@@ -49,4 +49,18 @@ async function getCredendtialById(userId: number, credentialId: number) {
     return decryptedCredential;
 }
 
-export { createCredential, getUserCredentials, getCredendtialById };
+async function deleteCredential(userId: number, credentialId: number) {
+    const credentialForDelection = await credentialRepository.getCredendtialById(userId, credentialId);
+
+    if (!credentialForDelection) {
+        throw throwErrorMessage("not_found", "This credential doesn't exist");
+    }
+
+    if (credentialForDelection.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to delete this credential");
+    }
+
+    await credentialRepository.deleteCredential(credentialForDelection.id);
+}
+
+export { createCredential, getUserCredentials, getCredendtialById, deleteCredential };

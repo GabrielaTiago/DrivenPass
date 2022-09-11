@@ -32,4 +32,11 @@ async function getCredendtialById(userId: number, credentialId: number) {
     return credential;
 }
 
-export { createCredential, findMoreThanOneTitle, getUserCredentials, getCredendtialById };
+async function deleteCredential(credentialId: number) {
+    const credentialForDeletion = await database.credential.delete({
+        where: { id: credentialId }
+    });
+    return credentialForDeletion;
+}
+
+export { createCredential, deleteCredential, findMoreThanOneTitle, getUserCredentials, getCredendtialById };
