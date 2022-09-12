@@ -8,6 +8,10 @@ export async function createWifi(wifi: WifiData, userId: number) {
 }
 
 export async function getUserWifis(userId: number) {
+    const resultWifis = await database.wifi.findMany({
+        where: { userId }
+    });
+    return resultWifis;
 }
 
 export async function getWifiById(userId: number, wifiId: number) {

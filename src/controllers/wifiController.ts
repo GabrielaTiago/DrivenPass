@@ -15,7 +15,9 @@ export async function createWifi(req: Request, res: Response) {
 export async function  getUserWifis(req: Request, res: Response) {
     const userId = Number(res.locals.userId);
 
-    res.status(200).send();
+    const allUserWifis = await wifisServices.getUserWifis(userId);
+
+    res.status(200).send(allUserWifis);
 }
 
 export async function getWifiById(req: Request, res: Response) {
