@@ -17,6 +17,10 @@ export async function createCard(card: CardData, userId: number) {
 }
 
 export async function getUserCards(userId: number) {
+    const resultCards = await database.card.findMany({
+        where: { userId }
+    });
+    return resultCards;
 }
 
 export async function getCardById(userId: number, cardId: number) {

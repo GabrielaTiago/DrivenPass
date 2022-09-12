@@ -8,14 +8,16 @@ export async function createCard(req: Request, res: Response) {
     const card: CardData = req.body;
 
     await cardsServices.createCard(card, userId);
-    
+
     res.status(201).send("Successfully created the card!");
 }
 
 export async function  getUserCards(req: Request, res: Response) {
     const userId = Number(res.locals.userId);
 
-    res.status(200).send();
+    const allUserCards = await cardsServices.getUserCards(userId);
+
+    res.status(200).send(allUserCards);
 }
 
 export async function getCardById(req: Request, res: Response) {

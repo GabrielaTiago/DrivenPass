@@ -1,8 +1,8 @@
 import { CardData } from "../types/cardType";
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
+import { cryptographsGeneralPasswords, decryptsPassword } from "../utils/passwordEncryption";
 
 import * as cardsRepository from "../repositories/cardsRepository"; 
-import { cryptographsGeneralPasswords } from "../utils/passwordEncryption";
 
 export async function createCard(card: CardData, userId: number) {
     const moreThanOneNickname = await cardsRepository.findMoreThanOneNickname(userId, card.nickname);
@@ -18,6 +18,20 @@ export async function createCard(card: CardData, userId: number) {
 }
 
 export async function getUserCards(userId: number) {
+    const allUserCards = await cardsRepository.getUserCards(userId);
+
+    if (!allUserCards) {
+        throw throwErrorMessage("not_found", "No credentials were found");
+    }
+
+    const decryptedCards = allUserCards.map((card) => {
+        return {
+            ...card,
+            password: decryptsPassword(card.password)
+        }
+    });
+
+    return decryptedCards;
 }
 
 export async function getCardById(userId: number, cardId: number) {
