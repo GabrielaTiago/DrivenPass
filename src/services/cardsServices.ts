@@ -21,7 +21,7 @@ export async function getUserCards(userId: number) {
     const allUserCards = await cardsRepository.getUserCards(userId);
 
     if (!allUserCards) {
-        throw throwErrorMessage("not_found", "No credentials were found");
+        throw throwErrorMessage("not_found", "No cards were found");
     }
 
     const decryptedCards = allUserCards.map((card) => {
@@ -35,6 +35,22 @@ export async function getUserCards(userId: number) {
 }
 
 export async function getCardById(userId: number, cardId: number) {
+    const specificCard = await cardsRepository.getCardById(userId, cardId);
+
+    if (!specificCard) {
+        throw throwErrorMessage("not_found", "It seems that this card doesn't exist yet");
+    }
+
+    if (specificCard.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to see this card");
+    }
+
+    const decryptedPassword = decryptsPassword(specificCard.password);
+    const decryptedCvv = decryptsPassword(specificCard.cvv);
+    
+    const decryptedCard = { ...specificCard, password: decryptedPassword, cvv: decryptedCvv };
+
+    return decryptedCard;
 }
 
 export async function deleteCard(userId: number, cardId: number) {

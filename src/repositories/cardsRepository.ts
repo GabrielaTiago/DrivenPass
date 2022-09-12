@@ -24,6 +24,10 @@ export async function getUserCards(userId: number) {
 }
 
 export async function getCardById(userId: number, cardId: number) {
+    const card = await database.card.findFirst({
+        where: { userId, id: cardId }
+    });
+    return card;
 }
 
 export async function deleteCard(cardId: number) {

@@ -24,7 +24,9 @@ export async function getCardById(req: Request, res: Response) {
     const userId: number = Number(res.locals.userId);
     const cardId: number = Number(req.params.id);
 
-    res.status(200).send();
+    const specificCard = await cardsServices.getCardById(userId, cardId);
+
+    res.status(200).send(specificCard);
 }
 
 export async function deleteCredentials(req: Request, res: Response) {
