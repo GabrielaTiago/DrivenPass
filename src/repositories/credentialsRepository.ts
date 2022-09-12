@@ -24,9 +24,9 @@ async function getUserCredentials(userId: number) {
     return resultCredentials;
 }
 
-async function getCredendtialById(userId: number, credentialId: number) {
+async function getCredendtialById(credentialId: number) {
     const credential = await database.credential.findFirst({
-        where: { userId, id: credentialId }
+        where: { id: credentialId }
     });
     return credential;
 }

@@ -18,7 +18,7 @@ export async function getUserNotes(userId: number) {
 }
 
 export async function getNoteById(userId: number, noteId: number) {
-    const specificNote = await notesRepository.getNoteById(userId, noteId);
+    const specificNote = await notesRepository.getNoteById(noteId);
 
     if (!specificNote) {
         throw throwErrorMessage("not_found", "It seems that this note doesn't exist yet");
@@ -32,7 +32,7 @@ export async function getNoteById(userId: number, noteId: number) {
 }
 
 export async function deleteNote(userId: number, noteId: number) {
-    const noteForDeletion = await notesRepository.getNoteById(userId, noteId);
+    const noteForDeletion = await notesRepository.getNoteById(noteId);
 
     if (!noteForDeletion) {
         throw throwErrorMessage("not_found", "It seems that this note doesn't exists");

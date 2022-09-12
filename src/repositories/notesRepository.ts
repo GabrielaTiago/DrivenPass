@@ -23,9 +23,9 @@ export async function getUserNotes(userId: number) {
     return resultNotes
 }
 
-export async function getNoteById(userId: number, noteId: number) {
+export async function getNoteById(noteId: number) {
     const specificNote = await database.note.findFirst({
-        where: { userId, id: noteId }
+        where: { id: noteId }
     });
     return specificNote;
 }

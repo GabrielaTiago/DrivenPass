@@ -34,9 +34,7 @@ async function getUserCredentials(userId: number) {
 }
 
 async function getCredendtialById(userId: number, credentialId: number) {
-    const specificCredential = await credentialRepository.getCredendtialById(userId, credentialId);
-    console.log(credentialId)
-    console.log(specificCredential)
+    const specificCredential = await credentialRepository.getCredendtialById(credentialId);
 
     if (!specificCredential) {
         throw throwErrorMessage("not_found", "It seems that this credential doesn't exist yet");
@@ -47,12 +45,13 @@ async function getCredendtialById(userId: number, credentialId: number) {
     }
 
     const decryptedPassword = decryptsPassword(specificCredential.password);
-    const decryptedCredential = { ...specificCredential, password: decryptedPassword }
+    const decryptedCredential = { ...specificCredential, password: decryptedPassword };
+    
     return decryptedCredential;
 }
 
 async function deleteCredential(userId: number, credentialId: number) {
-    const credentialForDelection = await credentialRepository.getCredendtialById(userId, credentialId);
+    const credentialForDelection = await credentialRepository.getCredendtialById(credentialId);
 
     if (!credentialForDelection) {
         throw throwErrorMessage("not_found", "This credential doesn't exist");

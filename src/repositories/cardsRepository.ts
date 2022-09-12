@@ -23,9 +23,9 @@ export async function getUserCards(userId: number) {
     return resultCards;
 }
 
-export async function getCardById(userId: number, cardId: number) {
+export async function getCardById(cardId: number) {
     const card = await database.card.findFirst({
-        where: { userId, id: cardId }
+        where: { id: cardId }
     });
     return card;
 }

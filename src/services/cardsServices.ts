@@ -36,7 +36,7 @@ export async function getUserCards(userId: number) {
 }
 
 export async function getCardById(userId: number, cardId: number) {
-    const specificCard = await cardsRepository.getCardById(userId, cardId);
+    const specificCard = await cardsRepository.getCardById(cardId);
 
     if (!specificCard) {
         throw throwErrorMessage("not_found", "It seems that this card doesn't exist yet");
@@ -55,7 +55,7 @@ export async function getCardById(userId: number, cardId: number) {
 }
 
 export async function deleteCard(userId: number, cardId: number) {
-    const cardForDelection = await cardsRepository.getCardById(userId, cardId);
+    const cardForDelection = await cardsRepository.getCardById(cardId);
 
     if (!cardForDelection) {
         throw throwErrorMessage("not_found", "This card doesn't exist");

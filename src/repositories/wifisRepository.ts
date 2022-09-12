@@ -14,9 +14,9 @@ export async function getUserWifis(userId: number) {
     return resultWifis;
 }
 
-export async function getWifiById(userId: number, wifiId: number) {
+export async function getWifiById(wifiId: number) {
     const specificWifi = await database.wifi.findFirst({
-        where: { userId, id: wifiId }
+        where: { id: wifiId }
     });
     return specificWifi;
 }

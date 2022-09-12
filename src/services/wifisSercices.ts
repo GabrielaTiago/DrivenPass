@@ -28,7 +28,7 @@ export async function getUserWifis(userId: number) {
 }
 
 export async function getWifiById(userId: number, wifiId: number) {
-    const specificWifi = await wifisRepository.getWifiById(userId, wifiId);
+    const specificWifi = await wifisRepository.getWifiById(wifiId);
 
     if (!specificWifi) {
         throw throwErrorMessage("not_found", "It seems that this wifi doesn't exist yet");
@@ -46,7 +46,7 @@ export async function getWifiById(userId: number, wifiId: number) {
 }
 
 export async function deleteWifi(userId: number, wifiId: number) {
-    const wifiForDelection = await wifisRepository.getWifiById(userId, wifiId);
+    const wifiForDelection = await wifisRepository.getWifiById(wifiId);
 
     if (!wifiForDelection) {
         throw throwErrorMessage("not_found", "This wifi doesn't exist");
