@@ -27,7 +27,8 @@ export async function getUserCards(userId: number) {
     const decryptedCards = allUserCards.map((card) => {
         return {
             ...card,
-            password: decryptsPassword(card.password)
+            password: decryptsPassword(card.password),
+            cvv: decryptsPassword(card.cvv)
         }
     });
 
@@ -47,7 +48,7 @@ export async function getCardById(userId: number, cardId: number) {
 
     const decryptedPassword = decryptsPassword(specificCard.password);
     const decryptedCvv = decryptsPassword(specificCard.cvv);
-    
+
     const decryptedCard = { ...specificCard, password: decryptedPassword, cvv: decryptedCvv };
 
     return decryptedCard;
