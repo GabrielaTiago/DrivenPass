@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
+import { WifiData } from "../types/wifiTypes";
 
+import * as wifisServices from "../services/wifisSercices";
 
 export async function createWifi(req: Request, res: Response) {
     const userId = Number(res.locals.userId);
-    const wifi = req.body;
+    const wifi: WifiData = req.body;
     
+    await wifisServices.createWifi(wifi, userId);
+
     res.status(201).send("Successfully created the wifi!");
 }
 
