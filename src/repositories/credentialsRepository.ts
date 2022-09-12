@@ -1,5 +1,5 @@
 import { database } from "../config/postegres";
-import { credentialData } from "../types/credentialType";
+import { CredentialData } from "../types/credentialType";
 
 async function findMoreThanOneTitle(userId: number, title: string) {
     const resultTitle = await database.credential.findUnique({
@@ -10,11 +10,10 @@ async function findMoreThanOneTitle(userId: number, title: string) {
     return resultTitle;
 }
 
-async function createCredential(credential: credentialData) {
-    const { userId, title, url, username, password } = credential;
+async function createCredential(credential: CredentialData, userId: number) {
 
     await database.credential.create({
-        data: { userId, title, url, username, password }
+        data: { ...credential, userId }
     });
 }
 

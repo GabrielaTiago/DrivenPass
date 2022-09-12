@@ -1,19 +1,19 @@
-import { credentialData } from "../types/credentialType";
+import { CredentialData } from "../types/credentialType";
 import { cryptographsGeneralPasswords, decryptsPassword } from "../utils/passwordEncryption";
 import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
 
 import * as credentialRepository from "../repositories/credentialsRepository"; 
 
-async function createCredential(credential: credentialData) {
-    const { userId, title, url, username, password } = credential;
-    const moreThanOneTitle = await credentialRepository.findMoreThanOneTitle(userId, title);
+async function createCredential(credential: CredentialData, userId: number) {
+    const moreThanOneTitle = await credentialRepository.findMoreThanOneTitle(userId, credential.title);
 
     if (moreThanOneTitle) {
         throw throwErrorMessage("conflict", "You already have a credential with this title");
     }
 
-    const encryptedPassword = cryptographsGeneralPasswords(password);
-    await credentialRepository.createCredential({ userId, title, url, username, password: encryptedPassword });
+    const encryptedPassword = cryptographsGeneralPasswords(credential.password);
+
+    await credentialRepository.createCredential({ ...credential, password: encryptedPassword }, userId);
 }
 
 async function getUserCredentials(userId: number) {
@@ -35,6 +35,8 @@ async function getUserCredentials(userId: number) {
 
 async function getCredendtialById(userId: number, credentialId: number) {
     const specificCredential = await credentialRepository.getCredendtialById(userId, credentialId);
+    console.log(credentialId)
+    console.log(specificCredential)
 
     if (!specificCredential) {
         throw throwErrorMessage("not_found", "It seems that this credential doesn't exist yet");
