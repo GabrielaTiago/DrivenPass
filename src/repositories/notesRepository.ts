@@ -1,5 +1,5 @@
 import { database } from "../config/postegres";
-import { noteData } from "../types/noteType";
+import { NoteData } from "../types/noteType";
 
 export async function findMoreThanOneTitle(userId: number, title: string) {
     const resultTitle = await database.note.findUnique({
@@ -10,11 +10,9 @@ export async function findMoreThanOneTitle(userId: number, title: string) {
     return resultTitle;
 }
 
-export async function createNote(note: noteData) {
-    const { userId, title, text } = note;
-
+export async function createNote(note: NoteData, userId: number) {
     await database.note.create({
-        data: { userId, title, text }
+        data: { ...note, userId }
     });
 }
 

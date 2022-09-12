@@ -1,3 +1,3 @@
 import { Note } from "@prisma/client";
 
-export type noteData = Omit<Note, "id" | "createdAt">;
+export type NoteData = Omit<Note, "id" | "userId" |"createdAt">;

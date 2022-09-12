@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
+import { NoteData } from "../types/noteType";
 
 import * as notesServices from "../services/notesServices";
 
 export async function createNote(req: Request, res: Response) {
-    const { userId } = res.locals;
-    const { title, text } = req.body;
+    const userId: number = Number(res.locals.userId);
+    const note: NoteData = req.body;
 
-    await notesServices.createNote({ userId, title, text });
+    await notesServices.createNote(note, userId);
     
     res.status(201).send("Successfully created the note!");
 }
