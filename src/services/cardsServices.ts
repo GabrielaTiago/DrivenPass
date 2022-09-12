@@ -55,4 +55,15 @@ export async function getCardById(userId: number, cardId: number) {
 }
 
 export async function deleteCard(userId: number, cardId: number) {
+    const cardForDelection = await cardsRepository.getCardById(userId, cardId);
+
+    if (!cardForDelection) {
+        throw throwErrorMessage("not_found", "This card doesn't exist");
+    }
+
+    if (cardForDelection.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to delete this card");
+    }
+
+    await cardsRepository.deleteCard(cardForDelection.id);
 }

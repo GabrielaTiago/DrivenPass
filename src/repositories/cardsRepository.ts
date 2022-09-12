@@ -31,4 +31,8 @@ export async function getCardById(userId: number, cardId: number) {
 }
 
 export async function deleteCard(cardId: number) {
+    const cardForDeletion = await database.card.delete({
+        where: { id: cardId }
+    });
+    return cardForDeletion;
 }
