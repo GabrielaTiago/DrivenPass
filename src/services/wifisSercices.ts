@@ -28,6 +28,21 @@ export async function getUserWifis(userId: number) {
 }
 
 export async function getWifiById(userId: number, wifiId: number) {
+    const specificWifi = await wifisRepository.getWifiById(userId, wifiId);
+
+    if (!specificWifi) {
+        throw throwErrorMessage("not_found", "It seems that this wifi doesn't exist yet");
+    }
+
+    if (specificWifi.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to see this wifi");
+    }
+
+    const decryptedPassword = decryptsPassword(specificWifi.password);
+
+    const decryptedWifi = { ...specificWifi, password: decryptedPassword};
+
+    return decryptedWifi;
 }
 
 export async function deleteWifi(userId: number, wifiId: number) {

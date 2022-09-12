@@ -15,6 +15,10 @@ export async function getUserWifis(userId: number) {
 }
 
 export async function getWifiById(userId: number, wifiId: number) {
+    const specificWifi = await database.wifi.findFirst({
+        where: { userId, id: wifiId }
+    });
+    return specificWifi;
 }
 
 export async function deleteWifi(wifiId: number) {
