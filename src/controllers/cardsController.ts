@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
+import { CardData } from "../types/cardType";
+
+import * as cardsServices from "../services/cardsServices";
 
 export async function createCard(req: Request, res: Response) {
-    const { userId } = res.locals;
-    const cardData = req.body;
+    const userId = Number(res.locals.userId);
+    const card: CardData = req.body;
 
+    await cardsServices.createCard(card, userId);
+    
     res.status(201).send("Successfully created the card!");
 }
 
