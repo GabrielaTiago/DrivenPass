@@ -33,5 +33,7 @@ export async function deleteWifi(req: Request, res: Response) {
     const userId: number = Number(res.locals.userId);
     const wifiId: number = Number(req.params.id);
 
+    await wifisServices.deleteWifi(userId, wifiId);
+    
     res.status(200).send("Successfully deleted the wifi!");
 }

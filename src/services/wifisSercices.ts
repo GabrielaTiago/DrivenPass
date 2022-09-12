@@ -46,4 +46,15 @@ export async function getWifiById(userId: number, wifiId: number) {
 }
 
 export async function deleteWifi(userId: number, wifiId: number) {
+    const wifiForDelection = await wifisRepository.getWifiById(userId, wifiId);
+
+    if (!wifiForDelection) {
+        throw throwErrorMessage("not_found", "This wifi doesn't exist");
+    }
+
+    if (wifiForDelection.userId !== userId) {
+        throw throwErrorMessage("forbidden", "You don't have the permition to delete this wifi");
+    }
+
+    await wifisRepository.deleteWifi(wifiForDelection.id);
 }

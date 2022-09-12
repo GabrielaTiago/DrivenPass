@@ -22,4 +22,8 @@ export async function getWifiById(userId: number, wifiId: number) {
 }
 
 export async function deleteWifi(wifiId: number) {
+    const wifiForDeletion = await database.wifi.delete({
+        where: { id: wifiId }
+    });
+    return wifiForDeletion;
 }
