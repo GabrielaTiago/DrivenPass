@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { authRouter } from "./authRoutes";
+import { authRouter } from "./authRouter";
 import { cardsRouter } from "./cardsRouter";
-import { credentialRouter } from "./credentialRoutes";
-import { noteRouter } from "./noteRouter";
-import { wifiRouter } from "./wifiRouter";
+import { credentialRouter } from "./credentialsRouter";
+import { noteRouter } from "./notesRouter";
+import { wifiRouter } from "./wifisRouter";
 
 const router = Router();
 

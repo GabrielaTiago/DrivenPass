@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signIn, signUp } from "../controllers/authRoutes";
+import { signIn, signUp } from "../controllers/authController";
 import { validateSchemas } from "../middlewares/validateSchemasMiddleware";
 
 const authRouter = Router();

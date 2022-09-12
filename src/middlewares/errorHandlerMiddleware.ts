@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { IErrors } from "../interfaces/errorsInterface";
-import { ERRORS, ErrorsTypes } from "../types/errors";
+import { ERRORS, ErrorsTypes } from "../types/errorsType";
 
 function errorHandler(
     err: IErrors,
