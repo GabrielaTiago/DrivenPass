@@ -1,8 +1,5 @@
-import { Card } from "@prisma/client";
+import { Card } from '@prisma/client';
 
-export type CardData = Omit<Card, "id" | "userId" | "createdAt">
+export type CardData = Omit<Card, 'id' | 'userId' | 'createdAt'>;
 
-export type CardType = 
-    | "credit"
-    | "debit"
-    | "both"
+export type CardType = 'credit' | 'debit' | 'both';

@@ -1,12 +1,12 @@
 const ERRORS = {
-    bad_request: 400,
-    unauthorized: 401,
-    forbidden: 403,
-    not_found: 404,
-    conflict: 409,
-    unprocessable_entity: 422
+  bad_request: 400,
+  unauthorized: 401,
+  forbidden: 403,
+  not_found: 404,
+  conflict: 409,
+  unprocessable_entity: 422,
 };
 
-type ErrorsTypes = keyof typeof ERRORS; 
+type ErrorsTypes = keyof typeof ERRORS;
 
 export { ERRORS, ErrorsTypes };

@@ -1,69 +1,68 @@
-import { CardData } from "../types/cardType";
-import { throwErrorMessage } from "../middlewares/errorHandlerMiddleware";
-import { cryptographsGeneralPasswords, decryptsPassword } from "../utils/passwordEncryption";
-
-import * as cardsRepository from "../repositories/cardsRepository"; 
+import { throwErrorMessage } from '../middlewares/errorHandlerMiddleware';
+import * as cardsRepository from '../repositories/cardsRepository';
+import { CardData } from '../types/cardType';
+import { cryptographsGeneralPasswords, decryptsPassword } from '../utils/passwordEncryption';
 
 export async function createCard(card: CardData, userId: number) {
-    const moreThanOneNickname = await cardsRepository.findMoreThanOneNickname(userId, card.nickname);
+  const moreThanOneNickname = await cardsRepository.findMoreThanOneNickname(userId, card.nickname);
 
-    if (moreThanOneNickname) {
-        throw throwErrorMessage("conflict", "You already have a card with this nickname");
-    }
+  if (moreThanOneNickname) {
+    throw throwErrorMessage('conflict', 'You already have a card with this nickname');
+  }
 
-    const encryptedPassword = cryptographsGeneralPasswords(card.password);
-    const encryptedCvv = cryptographsGeneralPasswords(card.cvv);
+  const encryptedPassword = cryptographsGeneralPasswords(card.password);
+  const encryptedCvv = cryptographsGeneralPasswords(card.cvv);
 
-    await cardsRepository.createCard({ ...card, password: encryptedPassword, cvv: encryptedCvv }, userId);
+  await cardsRepository.createCard({ ...card, password: encryptedPassword, cvv: encryptedCvv }, userId);
 }
 
 export async function getUserCards(userId: number) {
-    const allUserCards = await cardsRepository.getUserCards(userId);
+  const allUserCards = await cardsRepository.getUserCards(userId);
 
-    if (!allUserCards) {
-        throw throwErrorMessage("not_found", "No cards were found");
-    }
+  if (!allUserCards) {
+    throw throwErrorMessage('not_found', 'No cards were found');
+  }
 
-    const decryptedCards = allUserCards.map((card) => {
-        return {
-            ...card,
-            password: decryptsPassword(card.password),
-            cvv: decryptsPassword(card.cvv)
-        }
-    });
+  const decryptedCards = allUserCards.map((card) => {
+    return {
+      ...card,
+      password: decryptsPassword(card.password),
+      cvv: decryptsPassword(card.cvv),
+    };
+  });
 
-    return decryptedCards;
+  return decryptedCards;
 }
 
 export async function getCardById(userId: number, cardId: number) {
-    const specificCard = await cardsRepository.getCardById(cardId);
+  const specificCard = await cardsRepository.getCardById(cardId);
 
-    if (!specificCard) {
-        throw throwErrorMessage("not_found", "It seems that this card doesn't exist yet");
-    }
+  if (!specificCard) {
+    throw throwErrorMessage('not_found', "It seems that this card doesn't exist yet");
+  }
 
-    if (specificCard.userId !== userId) {
-        throw throwErrorMessage("forbidden", "You don't have the permition to see this card");
-    }
+  if (specificCard.userId !== userId) {
+    throw throwErrorMessage('forbidden', "You don't have the permition to see this card");
+  }
 
-    const decryptedPassword = decryptsPassword(specificCard.password);
-    const decryptedCvv = decryptsPassword(specificCard.cvv);
+  const decryptedPassword = decryptsPassword(specificCard.password);
+  const decryptedCvv = decryptsPassword(specificCard.cvv);
 
-    const decryptedCard = { ...specificCard, password: decryptedPassword, cvv: decryptedCvv };
+  const decryptedCard = { ...specificCard, password: decryptedPassword, cvv: decryptedCvv };
 
-    return decryptedCard;
+  return decryptedCard;
 }
 
 export async function deleteCard(userId: number, cardId: number) {
-    const cardForDelection = await cardsRepository.getCardById(cardId);
+  const cardForDelection = await cardsRepository.getCardById(cardId);
 
-    if (!cardForDelection) {
-        throw throwErrorMessage("not_found", "This card doesn't exist");
-    }
+  if (!cardForDelection) {
+    throw throwErrorMessage('not_found', "This card doesn't exist");
+  }
 
-    if (cardForDelection.userId !== userId) {
-        throw throwErrorMessage("forbidden", "You don't have the permition to delete this card");
-    }
+  if (cardForDelection.userId !== userId) {
+    throw throwErrorMessage('forbidden', "You don't have the permition to delete this card");
+  }
 
-    await cardsRepository.deleteCard(cardForDelection.id);
+  await cardsRepository.deleteCard(cardForDelection.id);
 }

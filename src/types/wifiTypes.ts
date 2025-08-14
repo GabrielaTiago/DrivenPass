@@ -1,3 +1,3 @@
-import { Wifi } from "@prisma/client";
+import { Wifi } from '@prisma/client';
 
-export type WifiData = Omit<Wifi, "id" | "userId" | "createdAt">
+export type WifiData = Omit<Wifi, 'id' | 'userId' | 'createdAt'>;
