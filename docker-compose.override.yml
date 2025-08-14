@@ -1,0 +1,17 @@
+services:
+  drivenpass-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: drivenpass-api-dev
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./prisma:/usr/src/app/prisma
+      - ./tsconfig.json:/usr/src/app/tsconfig.json
+      - ./nodemon.json:/usr/src/app/nodemon.json
+      - /usr/src/app/node_modules
+    command: npm run dev
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PORT=${PORT}
+      - CRYPTR_SECRET_KEY=${CRYPTR_SECRET_KEY}
