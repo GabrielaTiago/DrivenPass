@@ -1,4 +1,4 @@
-import { database } from '../config/postegres';
+import { database } from '../config/postgres';
 
 async function findUserEmail(userEmail: string) {
   const email = await database.user.findUnique({

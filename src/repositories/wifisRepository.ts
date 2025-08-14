@@ -1,4 +1,4 @@
-import { database } from '../config/postegres';
+import { database } from '../config/postgres';
 import { WifiData } from '../types/wifiTypes';
 
 export async function createWifi(wifi: WifiData, userId: number) {

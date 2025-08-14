@@ -1,4 +1,4 @@
-import { database } from '../config/postegres';
+import { database } from '../config/postgres';
 import { NoteData } from '../types/noteType';
 
 export async function findMoreThanOneTitle(userId: number, title: string) {

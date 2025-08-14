@@ -1,4 +1,4 @@
-import { database } from '../config/postegres';
+import { database } from '../config/postgres';
 import { CardData } from '../types/cardType';
 
 export async function findMoreThanOneNickname(userId: number, nickname: string) {

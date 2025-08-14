@@ -1,4 +1,4 @@
-import { database } from '../config/postegres';
+import { database } from '../config/postgres';
 import { CredentialData } from '../types/credentialType';
 
 async function findMoreThanOneTitle(userId: number, title: string) {
