@@ -1,0 +1,22 @@
+FROM node:20-bookworm
+
+WORKDIR /usr/src/app
+
+# Instalar dependências
+COPY package.json ./
+RUN npm install
+
+# Copiar schema do Prisma
+COPY prisma ./prisma
+
+# Gerar cliente Prisma
+RUN npx prisma generate
+
+# Copiar código fonte
+COPY . .
+
+# Expor porta
+EXPOSE 4000
+
+# Comando para executar testes com coverage
+CMD ["npm", "run", "test:coverage"]

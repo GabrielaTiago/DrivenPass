@@ -1,0 +1,37 @@
+services:
+  drivenpass-test-db:
+    image: postgres:15
+    container_name: drivenpass-test-db
+    restart: 'no'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-drivenpass_test}
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
+
+  drivenpass-test-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: drivenpass-test-api
+    restart: 'no'
+    depends_on:
+      - drivenpass-test-db
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@drivenpass-test-db:5432/${POSTGRES_DB:-drivenpass_test}
+      PORT: ${PORT:-4000}
+      CRYPTR_SECRET_KEY: ${CRYPTR_SECRET_KEY:-test_secret_key}
+      JWT_SECRET: ${JWT_SECRET:-test_jwt_secret}
+      NODE_ENV: test
+    ports:
+      - '4001:4000'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run test:coverage -- --run
+
+volumes:
+  pgdata_test:
