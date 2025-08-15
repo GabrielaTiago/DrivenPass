@@ -1,17 +1,13 @@
 import { throwErrorMessage } from '../middlewares/errorHandlerMiddleware';
 import * as credentialRepository from '../repositories/credentialsRepository';
 import { CredentialData } from '../types/credentialType';
-import { cryptographsGeneralPasswords, decryptsPassword } from '../utils/passwordEncryption';
-
+import { encryptPassword, decryptsPassword } from '../utils/passwordEncryption';
 
 async function createCredential(credential: CredentialData, userId: number) {
-  const moreThanOneTitle = await credentialRepository.findMoreThanOneTitle(userId, credential.title);
+  const credentialWithSameTitle = await credentialRepository.findCredentialTitleByUser(userId, credential.title);
+  if (credentialWithSameTitle) throw throwErrorMessage('conflict', 'Credential with this title already exists');
 
-  if (moreThanOneTitle) {
-    throw throwErrorMessage('conflict', 'You already have a credential with this title');
-  }
-
-  const encryptedPassword = cryptographsGeneralPasswords(credential.password);
+  const encryptedPassword = encryptPassword(credential.password);
 
   await credentialRepository.createCredential({ ...credential, password: encryptedPassword }, userId);
 }
@@ -34,7 +30,7 @@ async function getUserCredentials(userId: number) {
 }
 
 async function getCredendtialById(userId: number, credentialId: number) {
-  const specificCredential = await credentialRepository.getCredendtialById(credentialId);
+  const specificCredential = await credentialRepository.getCredentialById(credentialId);
 
   if (!specificCredential) {
     throw throwErrorMessage('not_found', "It seems that this credential doesn't exist yet");
@@ -51,7 +47,7 @@ async function getCredendtialById(userId: number, credentialId: number) {
 }
 
 async function deleteCredential(userId: number, credentialId: number) {
-  const credentialForDelection = await credentialRepository.getCredendtialById(credentialId);
+  const credentialForDelection = await credentialRepository.getCredentialById(credentialId);
 
   if (!credentialForDelection) {
     throw throwErrorMessage('not_found', "This credential doesn't exist");
