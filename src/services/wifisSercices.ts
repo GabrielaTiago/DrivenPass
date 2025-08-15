@@ -1,11 +1,10 @@
 import { throwErrorMessage } from '../middlewares/errorHandlerMiddleware';
 import * as wifisRepository from '../repositories/wifisRepository';
 import { WifiData } from '../types/wifiTypes';
-import { cryptographsGeneralPasswords, decryptsPassword } from '../utils/passwordEncryption';
-
+import { encryptPassword, decryptsPassword } from '../utils/passwordEncryption';
 
 export async function createWifi(wifi: WifiData, userId: number) {
-  const encryptedPassword = cryptographsGeneralPasswords(wifi.password);
+  const encryptedPassword = encryptPassword(wifi.password);
 
   await wifisRepository.createWifi({ ...wifi, password: encryptedPassword }, userId);
 }

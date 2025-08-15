@@ -1,13 +1,11 @@
 import { database } from '../config/postgres';
 import { CredentialData } from '../types/credentialType';
 
-async function findMoreThanOneTitle(userId: number, title: string) {
-  const resultTitle = await database.credential.findUnique({
-    where: {
-      userId_title: { userId, title },
-    },
+async function findCredentialTitleByUser(userId: number, title: string) {
+  const credential = await database.credential.findUnique({
+    where: { userId_title: { userId, title } },
   });
-  return resultTitle;
+  return credential;
 }
 
 async function createCredential(credential: CredentialData, userId: number) {
@@ -23,7 +21,7 @@ async function getUserCredentials(userId: number) {
   return resultCredentials;
 }
 
-async function getCredendtialById(credentialId: number) {
+async function getCredentialById(credentialId: number) {
   const credential = await database.credential.findFirst({
     where: { id: credentialId },
   });
@@ -37,4 +35,4 @@ async function deleteCredential(credentialId: number) {
   return credentialForDeletion;
 }
 
-export { createCredential, deleteCredential, findMoreThanOneTitle, getUserCredentials, getCredendtialById };
+export { createCredential, deleteCredential, findCredentialTitleByUser, getUserCredentials, getCredentialById };
