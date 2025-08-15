@@ -34,7 +34,7 @@ describe('Auth Service', () => {
 
     it('should throw a conflict error if the email is already in use', async () => {
       const { email, password } = userFactory.createSignUpData();
-      const existingUser = userFactory.createDbUser(email, password);
+      const existingUser = userFactory.createMockUser(email, password);
 
       vi.spyOn(authRepository, 'findUserEmail').mockResolvedValue(existingUser);
 
@@ -49,10 +49,10 @@ describe('Auth Service', () => {
   describe('login', () => {
     it('should return a token for valid credentials', async () => {
       const { email, password } = userFactory.createSignUpData();
-      const userFromDb = userFactory.createDbUser(email, password);
+      const mockUser = userFactory.createMockUser(email, password);
       const fakeToken = 'fake.jwt.token';
 
-      vi.spyOn(authRepository, 'findUserEmail').mockResolvedValue(userFromDb);
+      vi.spyOn(authRepository, 'findUserEmail').mockResolvedValue(mockUser);
       vi.spyOn(passwordUtils, 'comparePassword').mockReturnValue(true);
       vi.spyOn(tokenUtils, 'generateToken').mockReturnValue(fakeToken);
 
@@ -60,8 +60,8 @@ describe('Auth Service', () => {
 
       expect(token).toBe(fakeToken);
       expect(authRepository.findUserEmail).toHaveBeenCalledWith(email);
-      expect(passwordUtils.comparePassword).toHaveBeenCalledWith(password, userFromDb.password);
-      expect(tokenUtils.generateToken).toHaveBeenCalledWith(userFromDb.id);
+      expect(passwordUtils.comparePassword).toHaveBeenCalledWith(password, mockUser.password);
+      expect(tokenUtils.generateToken).toHaveBeenCalledWith(mockUser.id);
     });
 
     it('should throw an unauthorized error if the email (user) is not found    ', async () => {
@@ -78,15 +78,15 @@ describe('Auth Service', () => {
 
     it('should throw an unauthorized error if the password is incorrect', async () => {
       const { email, password } = userFactory.createSignUpData();
-      const userFromDb = userFactory.createDbUser(email, 'differentHashedPassword');
+      const mockUser = userFactory.createMockUser(email, 'differentHashedPassword');
 
-      vi.spyOn(authRepository, 'findUserEmail').mockResolvedValue(userFromDb);
+      vi.spyOn(authRepository, 'findUserEmail').mockResolvedValue(mockUser);
       vi.spyOn(passwordUtils, 'comparePassword').mockReturnValue(false);
 
       await expect(authService.login(email, password)).rejects.toThrow('Incorrect email and/or password');
 
       expect(authRepository.findUserEmail).toHaveBeenCalledWith(email);
-      expect(passwordUtils.comparePassword).toHaveBeenCalledWith(password, userFromDb.password);
+      expect(passwordUtils.comparePassword).toHaveBeenCalledWith(password, mockUser.password);
       expect(tokenUtils.generateToken).not.toHaveBeenCalled();
     });
   });
