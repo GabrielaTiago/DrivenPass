@@ -9,7 +9,7 @@ interface JWTPayload {
 }
 dotenv.config();
 
-function validatetoken(req: Request, res: Response, next: NextFunction) {
+export function validateToken(req: Request, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
 
   const token = authorization?.replace('Bearer ', '');
@@ -24,5 +24,3 @@ function validatetoken(req: Request, res: Response, next: NextFunction) {
 
   next();
 }
-
-export { validatetoken };
