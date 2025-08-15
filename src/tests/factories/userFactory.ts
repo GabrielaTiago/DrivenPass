@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
 
+import { database } from '../../config/postgres';
+import { generateToken } from '../../utils/token';
+
 function generatePassword(): string {
   const lowercase = 'abcdefghijklmnopqrstuvwxyz';
   const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -39,5 +42,20 @@ export const userFactory = {
       email: email || faker.internet.email(),
       password: password || faker.internet.password(),
     };
+  },
+
+  createUser() {
+    return database.user.create({
+      data: {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      },
+    });
+  },
+
+  async createUserAndToken() {
+    const user = await this.createUser();
+    const token = generateToken(user.id);
+    return { user, token };
   },
 };
