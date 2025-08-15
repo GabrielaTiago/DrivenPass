@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import supertest from 'supertest';
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 import { database } from '../../config/postgres';
 import { app } from '../../index';
@@ -9,14 +9,6 @@ import { userFactory } from '../factories/userFactory';
 const passwordErrorMessage = 'Password must contain at least 10 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character';
 
 const agent = supertest(app);
-
-beforeEach(async () => {
-  await database.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY CASCADE`;
-});
-
-afterAll(async () => {
-  await database.$disconnect();
-});
 
 describe('Auth Integration Tests', () => {
   describe('POST /sign-up', () => {
