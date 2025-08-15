@@ -1,20 +1,15 @@
 import { database } from '../config/postgres';
 
-async function findUserEmail(userEmail: string) {
-  const email = await database.user.findUnique({
-    where: {
-      email: userEmail,
-    },
+async function findUserEmail(email: string) {
+  const user = await database.user.findUnique({
+    where: { email },
   });
-  return email;
+  return user;
 }
 
-async function createUser(userEmail: string, userPassword: string) {
+async function createUser(email: string, password: string) {
   await database.user.create({
-    data: {
-      email: userEmail,
-      password: userPassword,
-    },
+    data: { email, password },
   });
 }
 
