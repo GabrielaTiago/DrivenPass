@@ -22,7 +22,7 @@ export function encryptPassword(password: string) {
   return crypts;
 }
 
-export function decryptsPassword(password: string) {
+export function decryptPassword(password: string) {
   const decrypts = cryptr.decrypt(password);
   return decrypts;
 }

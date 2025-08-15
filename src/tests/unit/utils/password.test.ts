@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { encryptsPassword, comparePassword, encryptPassword, decryptsPassword } from '../../../utils/passwordEncryption';
+import { encryptsPassword, comparePassword, encryptPassword, decryptPassword } from '../../../utils/passwordEncryption';
 
 const { mockEncrypt, mockDecrypt } = vi.hoisted(() => ({
   mockEncrypt: vi.fn(),
@@ -72,13 +72,13 @@ describe('Password Encryption Utils', () => {
     });
   });
 
-  describe('decryptsPassword', () => {
+  describe('decryptPassword', () => {
     it('should call cryptr.decrypt and return the decrypted string', () => {
       const encryptedString = 'a_cryptr_encrypted_string';
 
       mockDecrypt.mockReturnValue(password);
 
-      const result = decryptsPassword(encryptedString);
+      const result = decryptPassword(encryptedString);
 
       expect(mockDecrypt).toHaveBeenCalledWith(encryptedString);
       expect(result).toBe(password);
