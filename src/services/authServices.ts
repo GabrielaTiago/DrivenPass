@@ -15,16 +15,11 @@ async function createUser(email: string, password: string) {
 }
 
 async function login(email: string, password: string) {
-  const userData = await authRepository.findUserEmail(email);
-  const validEmail = userData?.email;
-  const validPassword = userData?.password as string;
-
-  if (!validEmail || !comparePassword(password, validPassword)) {
-    throw throwErrorMessage('unauthorized', 'Incorrect email and/or password');
-  }
-
-  const token = generateToken(userData.id);
-  return token;
+  const user = await authRepository.findUserEmail(email);
+  const savedEmail = user?.email;
+  const savedPassword = user?.password as string;
+  if (!savedEmail || !comparePassword(password, savedPassword)) throw throwErrorMessage('unauthorized', 'Incorrect email and/or password');
+  return generateToken(user.id);
 }
 
 function generateToken(userId: number) {
