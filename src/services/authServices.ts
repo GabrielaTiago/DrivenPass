@@ -23,8 +23,12 @@ async function login(email: string, password: string) {
     throw throwErrorMessage('unauthorized', 'Incorrect email and/or password');
   }
 
-  const token = jwt.sign({ id: userData.id }, process.env.JWT_SECRET as string, { expiresIn: '4h' });
+  const token = generateToken(userData.id);
+  return token;
+}
 
+function generateToken(userId: number) {
+  const token = jwt.sign({ id: userId }, process.env.JWT_SECRET as string, { expiresIn: '4h' });
   return token;
 }
 
