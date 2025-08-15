@@ -5,24 +5,24 @@ import { ERRORS, ErrorsTypes } from '../types/errorsType';
 
 interface CustomError extends Error {
   type: ErrorsTypes;
-  error_message: string | string[];
+  message: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function errorHandler(err: IErrors, _req: Request, res: Response, _next: NextFunction) {
-  const { type, error_message } = err;
+  const { type, message } = err;
   const statusCode = ERRORS[type];
 
   if (statusCode) {
-    return res.status(statusCode).send(error_message);
+    return res.status(statusCode).send({ message });
   }
-  return res.status(500).send(err.message);
+  return res.status(ERRORS.internal_server_error).send(err.message);
 }
 
-function throwErrorMessage(type: ErrorsTypes, error_message: string | string[]) {
+function throwErrorMessage(type: ErrorsTypes, message: string) {
   const error = new Error() as CustomError;
   error.type = type;
-  error.error_message = error_message;
+  error.message = message;
   throw error;
 }
 
