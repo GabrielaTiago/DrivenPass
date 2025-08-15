@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { Credential } from '@prisma/client';
 
 import { CredentialData } from '../../types/credentialType';
 
@@ -12,7 +13,7 @@ export const credentialFactory = {
     };
   },
 
-  createDbCredential(override: Partial<CredentialData> = {}, userId?: number) {
+  createDbCredential(override: Partial<Credential> = {}, userId?: number) {
     const credentialData = this.createCredentialData();
     return {
       id: faker.number.int(),
