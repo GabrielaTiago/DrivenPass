@@ -13,10 +13,10 @@ export const credentialFactory = {
     };
   },
 
-  createDbCredential(override: Partial<Credential> = {}, userId?: number) {
+  createMockCredential(override: Partial<Credential> = {}, userId?: number) {
     const credentialData = this.createCredentialData();
     return {
-      id: faker.number.int(),
+      id: faker.number.int({ min: 1, max: 10000 }),
       userId: userId || faker.number.int(),
       createdAt: faker.date.recent(),
       ...credentialData,
