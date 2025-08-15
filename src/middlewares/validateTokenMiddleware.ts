@@ -1,25 +1,16 @@
-import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 
 import { throwErrorMessage } from './errorHandlerMiddleware';
-
-interface JWTPayload {
-  id: number;
-}
-dotenv.config();
+import { verifyToken } from '../utils/token';
 
 export function validateToken(req: Request, res: Response, next: NextFunction) {
   const { authorization } = req.headers;
 
   const token = authorization?.replace('Bearer ', '');
+  if (!token) throw throwErrorMessage('unauthorized', 'Token JWT not sent');
 
-  if (!token) {
-    throw throwErrorMessage('unauthorized', 'Does not contain a valid token');
-  }
-
-  const validToken = jwt.verify(token, process.env.JWT_SECRET as string) as JWTPayload;
-
+  const validToken = verifyToken(token);
+  if (!validToken) throw throwErrorMessage('unauthorized', 'Invalid or expired token');
   res.locals.userId = validToken.id;
 
   next();
