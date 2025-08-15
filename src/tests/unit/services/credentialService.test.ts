@@ -35,7 +35,7 @@ describe('Credential Service', () => {
     it('should throw a conflict error if the credential title already exists for the user', async () => {
       const userId = 1;
       const credentialData = credentialFactory.createCredentialData();
-      const existingCredential = credentialFactory.createDbCredential(credentialData);
+      const existingCredential = credentialFactory.createMockCredential(credentialData);
       const conflictError = { type: 'conflict', message: 'Credential with this title already exists' };
 
       vi.spyOn(credentialRepository, 'findCredentialTitleByUser').mockResolvedValue(existingCredential);
@@ -52,7 +52,7 @@ describe('Credential Service', () => {
   describe('getUserCredentials', () => {
     it('should return the user credentials with decrypted passwords', async () => {
       const userId = 1;
-      const credentials = [credentialFactory.createDbCredential({}, userId), credentialFactory.createDbCredential({}, userId)];
+      const credentials = [credentialFactory.createMockCredential({}, userId), credentialFactory.createMockCredential({}, userId)];
       const credentialsListLength = 2;
       const decryptedPassword = 'decrypted_password';
 
@@ -88,7 +88,7 @@ describe('Credential Service', () => {
     it('should return a specific credential with decrypted password', async () => {
       const userId = 1;
       const credentialId = 10;
-      const credential = credentialFactory.createDbCredential({ id: credentialId }, userId);
+      const credential = credentialFactory.createMockCredential({ id: credentialId }, userId);
       const decryptedPassword = 'decrypted_password';
 
       vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(credential);
@@ -122,7 +122,7 @@ describe('Credential Service', () => {
       const userId = 1;
       const ownerId = 2;
       const credentialId = 10;
-      const credential = credentialFactory.createDbCredential({}, ownerId);
+      const credential = credentialFactory.createMockCredential({}, ownerId);
       const forbiddenError = { type: 'forbidden', message: 'You do not have permission to see this credential' };
 
       vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(credential);
@@ -140,7 +140,7 @@ describe('Credential Service', () => {
     it('should delete a credential successfully', async () => {
       const userId = 1;
       const credentialId = 10;
-      const credential = credentialFactory.createDbCredential({ id: credentialId }, userId);
+      const credential = credentialFactory.createMockCredential({ id: credentialId }, userId);
 
       vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(credential);
       vi.spyOn(credentialRepository, 'deleteCredential').mockResolvedValue(undefined);
@@ -172,7 +172,7 @@ describe('Credential Service', () => {
       const userId = 1;
       const ownerId = 2;
       const credentialId = 10;
-      const credential = credentialFactory.createDbCredential({ id: credentialId }, ownerId);
+      const credential = credentialFactory.createMockCredential({ id: credentialId }, ownerId);
       const forbiddenError = { type: 'forbidden', message: 'You do not have permission to delete this credential' };
 
       vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(credential);
