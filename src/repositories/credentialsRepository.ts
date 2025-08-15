@@ -29,10 +29,9 @@ async function getCredentialById(credentialId: number) {
 }
 
 async function deleteCredential(credentialId: number) {
-  const credentialForDeletion = await database.credential.delete({
+  await database.credential.delete({
     where: { id: credentialId },
   });
-  return credentialForDeletion;
 }
 
 export { createCredential, deleteCredential, findCredentialTitleByUser, getUserCredentials, getCredentialById };
