@@ -1,12 +1,13 @@
 import { Router } from 'express';
 
 import { createNote, deleteNote, getNoteById, getUserNotes } from '../controllers/notesController';
-import { validateSchemas } from '../middlewares/validateSchemasMiddleware';
+import { validateSchema } from '../middlewares/validateSchemaMiddleware';
 import { validatetoken } from '../middlewares/validateTokenMiddleware';
+import { schemas } from '../schemas/schemas';
 
 const noteRouter = Router();
 
-noteRouter.post('/notes', validateSchemas('note'), validatetoken, createNote);
+noteRouter.post('/notes', validateSchema(schemas.note), validatetoken, createNote);
 noteRouter.get('/notes/all', validatetoken, getUserNotes);
 noteRouter.get('/notes/:id', validatetoken, getNoteById);
 noteRouter.delete('/notes/:id/delete', validatetoken, deleteNote);

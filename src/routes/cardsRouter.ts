@@ -1,12 +1,13 @@
 import { Router } from 'express';
 
 import { createCard, deleteCard, getCardById, getUserCards } from '../controllers/cardsController';
-import { validateSchemas } from '../middlewares/validateSchemasMiddleware';
+import { validateSchema } from '../middlewares/validateSchemaMiddleware';
 import { validatetoken } from '../middlewares/validateTokenMiddleware';
+import { schemas } from '../schemas/schemas';
 
 const cardsRouter = Router();
 
-cardsRouter.post('/cards', validateSchemas('card'), validatetoken, createCard);
+cardsRouter.post('/cards', validateSchema(schemas.card), validatetoken, createCard);
 cardsRouter.get('/cards/all', validatetoken, getUserCards);
 cardsRouter.get('/cards/:id', validatetoken, getCardById);
 cardsRouter.delete('/cards/:id/delete', validatetoken, deleteCard);

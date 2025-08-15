@@ -1,11 +1,12 @@
 import { Router } from 'express';
 
 import { signIn, signUp } from '../controllers/authController';
-import { validateSchemas } from '../middlewares/validateSchemasMiddleware';
+import { validateSchema } from '../middlewares/validateSchemaMiddleware';
+import { schemas } from '../schemas/schemas';
 
 const authRouter = Router();
 
-authRouter.post('/', validateSchemas('auth'), signIn);
-authRouter.post('/sign-up', validateSchemas('auth'), signUp);
+authRouter.post('/sign-in', validateSchema(schemas.auth), signIn);
+authRouter.post('/sign-up', validateSchema(schemas.auth), signUp);
 
 export { authRouter };
