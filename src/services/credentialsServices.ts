@@ -12,7 +12,7 @@ async function createCredential(credential: CredentialData, userId: number) {
 
 async function getUserCredentials(userId: number) {
   const userCredentials = await credentialRepository.getUserCredentials(userId);
-  if (!userCredentials) throw throwErrorMessage('not_found', 'No credentials were found');
+  if (userCredentials.length === 0) throw throwErrorMessage('not_found', 'No credentials were found');
   const decryptedCredentials = userCredentials.map((credential) => {
     return { ...credential, password: decryptPassword(credential.password) };
   });
