@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
@@ -9,14 +8,9 @@ import { comparePassword, encryptsPassword } from '../utils/passwordEncryption';
 dotenv.config();
 
 async function createUser(email: string, password: string) {
-  const emailExists = await authRepository.findUserEmail(email);
-
-  if (emailExists) {
-    //throw { type: "Conflict", error_message: "This email is already in use. Please choose a new email for registration"}
-    throw throwErrorMessage('conflict', 'This email is already in use. Please choose a new email for registration');
-  }
+  const user = await authRepository.findUserEmail(email);
+  if (user) throw throwErrorMessage('conflict', 'This email is already in use. Please choose a new email for registration');
   const encryptedPassword = encryptsPassword(password);
-
   await authRepository.createUser(email, encryptedPassword);
 }
 
