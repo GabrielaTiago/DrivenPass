@@ -31,7 +31,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run test:coverage -- --run
+    command: npm run test
 
 volumes:
   pgdata_test:
