@@ -33,9 +33,9 @@ export const userFactory = {
     };
   },
 
-  createDbUser(email?: string, password?: string) {
+  createMockUser(email?: string, password?: string) {
     return {
-      id: faker.number.int(),
+      id: faker.number.int({ min: 1, max: 10000 }),
       email: email || faker.internet.email(),
       password: password || faker.internet.password(),
     };
