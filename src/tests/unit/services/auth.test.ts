@@ -4,7 +4,7 @@ import * as authRepository from '../../../repositories/authRepository';
 import * as authService from '../../../services/authServices';
 import * as passwordUtils from '../../../utils/passwordEncryption';
 import * as tokenUtils from '../../../utils/token';
-import { userFactory } from '../../factory/userFactory';
+import { userFactory } from '../../factories/userFactory';
 
 vi.mock('../../../repositories/authRepository');
 vi.mock('../../../utils/passwordEncryption');

@@ -4,7 +4,7 @@ import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 
 import { database } from '../../config/postgres';
 import { app } from '../../index';
-import { userFactory } from '../factory/userFactory';
+import { userFactory } from '../factories/userFactory';
 
 const passwordErrorMessage = 'Password must contain at least 10 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character';
 
