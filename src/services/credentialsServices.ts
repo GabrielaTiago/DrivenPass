@@ -34,4 +34,11 @@ async function deleteCredential(userId: number, credentialId: number) {
   await credentialRepository.deleteCredential(credential.id);
 }
 
-export { createCredential, getUserCredentials, getCredentialById, deleteCredential };
+async function updateCredential(userId: number, credentialId: number, credentialData: CredentialData) {
+  const credential = await credentialRepository.getCredentialById(credentialId);
+  if (!credential) throw throwErrorMessage('not_found', "Credential doesn't exist");
+  if (credential.userId !== userId) throw throwErrorMessage('forbidden', 'You do not have permission to update this credential');
+  await credentialRepository.updateCredential(credential.id, credentialData);
+}
+
+export { createCredential, getUserCredentials, getCredentialById, deleteCredential, updateCredential };
