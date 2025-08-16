@@ -187,4 +187,57 @@ describe('Credential Service', () => {
       expect(credentialRepository.deleteCredential).not.toHaveBeenCalled();
     });
   });
+
+  describe('updateCredential', () => {
+    it('should update a credential successfully', async () => {
+      const userId = 1;
+      const credentialId = 10;
+      const credential = credentialFactory.createMockCredential({ id: credentialId }, userId);
+      const credentialData = credentialFactory.createCredentialData();
+
+      vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(credential);
+      vi.spyOn(credentialRepository, 'updateCredential').mockResolvedValue(undefined);
+
+      await credentialService.updateCredential(userId, credentialId, credentialData);
+
+      expect(credentialRepository.getCredentialById).toHaveBeenCalledWith(credentialId);
+      expect(credentialRepository.updateCredential).toHaveBeenCalledWith(credentialId, credentialData);
+      expect(credential.id).toBe(credentialId);
+      expect(credential.userId).toBe(userId);
+    });
+
+    it('should throw a not found error if the credential to be updated does not exist', async () => {
+      const userId = 1;
+      const credentialId = 999;
+      const credentialData = credentialFactory.createCredentialData();
+      const notFoundError = { type: 'not_found', message: "Credential doesn't exist" };
+
+      vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(null);
+      vi.spyOn(errorHandlerMiddleware, 'throwErrorMessage').mockImplementation(() => {
+        throw notFoundError;
+      });
+
+      await expect(credentialService.updateCredential(userId, credentialId, credentialData)).rejects.toEqual(notFoundError);
+      expect(credentialRepository.getCredentialById).toHaveBeenCalledWith(credentialId);
+      expect(credentialRepository.updateCredential).not.toHaveBeenCalled();
+    });
+
+    it('should throw a forbidden error if the user tries to update a credential from another user', async () => {
+      const userId = 1;
+      const ownerId = 2;
+      const credentialId = 10;
+      const credential = credentialFactory.createMockCredential({ id: credentialId }, ownerId);
+      const credentialData = credentialFactory.createCredentialData();
+      const forbiddenError = { type: 'forbidden', message: 'You do not have permission to update this credential' };
+
+      vi.spyOn(credentialRepository, 'getCredentialById').mockResolvedValue(credential);
+      vi.spyOn(errorHandlerMiddleware, 'throwErrorMessage').mockImplementation(() => {
+        throw forbiddenError;
+      });
+
+      await expect(credentialService.updateCredential(userId, credentialId, credentialData)).rejects.toEqual(forbiddenError);
+      expect(credentialRepository.getCredentialById).toHaveBeenCalledWith(credentialId);
+      expect(credentialRepository.updateCredential).not.toHaveBeenCalled();
+    });
+  });
 });
