@@ -34,4 +34,11 @@ async function deleteCredential(credentialId: number) {
   });
 }
 
-export { createCredential, deleteCredential, findCredentialTitleByUser, getUserCredentials, getCredentialById };
+async function updateCredential(credentialId: number, credential: CredentialData) {
+  await database.credential.update({
+    where: { id: credentialId },
+    data: credential,
+  });
+}
+
+export { createCredential, deleteCredential, findCredentialTitleByUser, getUserCredentials, getCredentialById, updateCredential };
