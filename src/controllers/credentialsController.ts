@@ -30,4 +30,12 @@ async function deleteCredentials(req: Request, res: Response) {
   res.status(200).send({ message: 'Credential deleted successfully' });
 }
 
-export { createCredential, deleteCredentials, getUserCredentials, getCredentialById };
+async function updateCredential(req: Request, res: Response) {
+  const userId = Number(res.locals.userId);
+  const credentialId = Number(req.params.id);
+  const credentialData: CredentialData = req.body;
+  await credentialsServices.updateCredential(userId, credentialId, credentialData);
+  res.status(200).send({ message: 'Credential updated successfully' });
+}
+
+export { createCredential, deleteCredentials, getUserCredentials, getCredentialById, updateCredential };
