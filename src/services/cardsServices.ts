@@ -1,68 +1,57 @@
+import { Card } from '@prisma/client';
+
 import { throwErrorMessage } from '../middlewares/errorHandlerMiddleware';
 import * as cardsRepository from '../repositories/cardsRepository';
 import { CardData } from '../types/cardType';
 import { encryptPassword, decryptPassword } from '../utils/passwordEncryption';
 
-export async function createCard(card: CardData, userId: number) {
-  const moreThanOneNickname = await cardsRepository.findMoreThanOneNickname(userId, card.nickname);
-
-  if (moreThanOneNickname) {
-    throw throwErrorMessage('conflict', 'You already have a card with this nickname');
-  }
-
-  const encryptedPassword = encryptPassword(card.password);
-  const encryptedCvv = encryptPassword(card.cvv);
-
-  await cardsRepository.createCard({ ...card, password: encryptedPassword, cvv: encryptedCvv }, userId);
+export async function createCard(data: CardData, userId: number) {
+  await checkCardNickname(userId, data.nickname);
+  const encryptedPassword = encryptPassword(data.password);
+  const encryptedCvv = encryptPassword(data.cvv);
+  await cardsRepository.createCard({ ...data, password: encryptedPassword, cvv: encryptedCvv }, userId);
 }
 
 export async function getUserCards(userId: number) {
-  const allUserCards = await cardsRepository.getUserCards(userId);
-
-  if (!allUserCards) {
-    throw throwErrorMessage('not_found', 'No cards were found');
-  }
-
-  const decryptedCards = allUserCards.map((card) => {
-    return {
-      ...card,
-      password: decryptPassword(card.password),
-      cvv: decryptPassword(card.cvv),
-    };
-  });
-
-  return decryptedCards;
+  const cards = await cardsRepository.getUserCards(userId);
+  return cards.map(decryptCard);
 }
 
 export async function getCardById(userId: number, cardId: number) {
-  const specificCard = await cardsRepository.getCardById(cardId);
-
-  if (!specificCard) {
-    throw throwErrorMessage('not_found', "It seems that this card doesn't exist yet");
-  }
-
-  if (specificCard.userId !== userId) {
-    throw throwErrorMessage('forbidden', "You don't have the permition to see this card");
-  }
-
-  const decryptedPassword = decryptPassword(specificCard.password);
-  const decryptedCvv = decryptPassword(specificCard.cvv);
-
-  const decryptedCard = { ...specificCard, password: decryptedPassword, cvv: decryptedCvv };
-
-  return decryptedCard;
+  const card = await validateCardAccess(userId, cardId);
+  return decryptCard(card);
 }
 
 export async function deleteCard(userId: number, cardId: number) {
-  const cardForDelection = await cardsRepository.getCardById(cardId);
+  await validateCardAccess(userId, cardId);
+  await cardsRepository.deleteCard(cardId);
+}
 
-  if (!cardForDelection) {
-    throw throwErrorMessage('not_found', "This card doesn't exist");
-  }
+export async function updateCard(userId: number, cardId: number, data: CardData) {
+  await validateCardAccess(userId, cardId);
+  await cardsRepository.updateCard(cardId, {
+    ...data,
+    password: encryptPassword(data.password),
+    cvv: encryptPassword(data.cvv),
+  });
+}
 
-  if (cardForDelection.userId !== userId) {
-    throw throwErrorMessage('forbidden', "You don't have the permition to delete this card");
-  }
+export async function checkCardNickname(userId: number, nickname: string) {
+  const card = await cardsRepository.findCardByNicknameAndUser(userId, nickname);
+  if (card) throw throwErrorMessage('conflict', 'Card with this nickname already exists');
+}
 
-  await cardsRepository.deleteCard(cardForDelection.id);
+export function decryptCard(card: Card) {
+  return {
+    ...card,
+    password: decryptPassword(card.password),
+    cvv: decryptPassword(card.cvv),
+  };
+}
+
+export async function validateCardAccess(userId: number, cardId: number) {
+  const card = await cardsRepository.getCardById(cardId);
+  if (!card) throw throwErrorMessage('not_found', "Card doesn't exist");
+  if (card.userId !== userId) throw throwErrorMessage('forbidden', "You don't have the permission to perform this action");
+  return card;
 }
