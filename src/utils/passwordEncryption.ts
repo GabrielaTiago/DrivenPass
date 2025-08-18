@@ -17,12 +17,12 @@ export function comparePassword(password: string, encryptedPassword: string) {
   return compareHash;
 }
 
-export function cryptographsGeneralPasswords(password: string) {
+export function encryptPassword(password: string) {
   const crypts = cryptr.encrypt(password);
   return crypts;
 }
 
-export function decryptsPassword(password: string) {
+export function decryptPassword(password: string) {
   const decrypts = cryptr.decrypt(password);
   return decrypts;
 }

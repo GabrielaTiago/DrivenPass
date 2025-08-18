@@ -1,11 +1,10 @@
 import { throwErrorMessage } from '../middlewares/errorHandlerMiddleware';
 import * as wifisRepository from '../repositories/wifisRepository';
 import { WifiData } from '../types/wifiTypes';
-import { cryptographsGeneralPasswords, decryptsPassword } from '../utils/passwordEncryption';
-
+import { encryptPassword, decryptPassword } from '../utils/passwordEncryption';
 
 export async function createWifi(wifi: WifiData, userId: number) {
-  const encryptedPassword = cryptographsGeneralPasswords(wifi.password);
+  const encryptedPassword = encryptPassword(wifi.password);
 
   await wifisRepository.createWifi({ ...wifi, password: encryptedPassword }, userId);
 }
@@ -20,7 +19,7 @@ export async function getUserWifis(userId: number) {
   const decryptedWifis = allUserWifis.map((wifi) => {
     return {
       ...wifi,
-      password: decryptsPassword(wifi.password),
+      password: decryptPassword(wifi.password),
     };
   });
 
@@ -38,7 +37,7 @@ export async function getWifiById(userId: number, wifiId: number) {
     throw throwErrorMessage('forbidden', "You don't have the permition to see this wifi");
   }
 
-  const decryptedPassword = decryptsPassword(specificWifi.password);
+  const decryptedPassword = decryptPassword(specificWifi.password);
 
   const decryptedWifi = { ...specificWifi, password: decryptedPassword };
 
