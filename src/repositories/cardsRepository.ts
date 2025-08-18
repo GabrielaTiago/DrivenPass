@@ -1,13 +1,13 @@
 import { database } from '../config/postgres';
 import { CardData } from '../types/cardType';
 
-export async function findMoreThanOneNickname(userId: number, nickname: string) {
-  const resultNickname = await database.card.findUnique({
+export async function findCardByNicknameAndUser(userId: number, nickname: string) {
+  const card = await database.card.findUnique({
     where: {
       userId_nickname: { userId, nickname },
     },
   });
-  return resultNickname;
+  return card;
 }
 
 export async function createCard(card: CardData, userId: number) {
@@ -23,16 +23,22 @@ export async function getUserCards(userId: number) {
   return resultCards;
 }
 
-export async function getCardById(cardId: number) {
+export async function getCardById(id: number) {
   const card = await database.card.findFirst({
-    where: { id: cardId },
+    where: { id },
   });
   return card;
 }
 
-export async function deleteCard(cardId: number) {
-  const cardForDeletion = await database.card.delete({
-    where: { id: cardId },
+export async function deleteCard(id: number) {
+  await database.card.delete({
+    where: { id },
   });
-  return cardForDeletion;
+}
+
+export async function updateCard(id: number, data: CardData) {
+  await database.card.update({
+    where: { id },
+    data,
+  });
 }
