@@ -1,13 +1,11 @@
 import { database } from '../config/postgres';
 import { CredentialData } from '../types/credentialType';
 
-async function findMoreThanOneTitle(userId: number, title: string) {
-  const resultTitle = await database.credential.findUnique({
-    where: {
-      userId_title: { userId, title },
-    },
+async function findCredentialTitleByUser(userId: number, title: string) {
+  const credential = await database.credential.findUnique({
+    where: { userId_title: { userId, title } },
   });
-  return resultTitle;
+  return credential;
 }
 
 async function createCredential(credential: CredentialData, userId: number) {
@@ -23,7 +21,7 @@ async function getUserCredentials(userId: number) {
   return resultCredentials;
 }
 
-async function getCredendtialById(credentialId: number) {
+async function getCredentialById(credentialId: number) {
   const credential = await database.credential.findFirst({
     where: { id: credentialId },
   });
@@ -31,10 +29,16 @@ async function getCredendtialById(credentialId: number) {
 }
 
 async function deleteCredential(credentialId: number) {
-  const credentialForDeletion = await database.credential.delete({
+  await database.credential.delete({
     where: { id: credentialId },
   });
-  return credentialForDeletion;
 }
 
-export { createCredential, deleteCredential, findMoreThanOneTitle, getUserCredentials, getCredendtialById };
+async function updateCredential(credentialId: number, credential: CredentialData) {
+  await database.credential.update({
+    where: { id: credentialId },
+    data: credential,
+  });
+}
+
+export { createCredential, deleteCredential, findCredentialTitleByUser, getUserCredentials, getCredentialById, updateCredential };
