@@ -1,7 +1,7 @@
 import { database } from '../config/postgres';
 import { NoteData } from '../types/noteType';
 
-export async function findMoreThanOneTitle(userId: number, title: string) {
+export async function findNoteTitleByUser(userId: number, title: string) {
   const resultTitle = await database.note.findUnique({
     where: {
       userId_title: { userId, title },
@@ -23,16 +23,22 @@ export async function getUserNotes(userId: number) {
   return resultNotes;
 }
 
-export async function getNoteById(noteId: number) {
+export async function getNoteById(id: number) {
   const specificNote = await database.note.findFirst({
-    where: { id: noteId },
+    where: { id },
   });
   return specificNote;
 }
 
-export async function deleteNote(noteId: number) {
-  const noteForDeletion = await database.note.delete({
-    where: { id: noteId },
+export async function deleteNote(id: number) {
+  await database.note.delete({
+    where: { id },
   });
-  return noteForDeletion;
+}
+
+export async function updateNote(id: number, note: NoteData) {
+  await database.note.update({
+    where: { id },
+    data: note,
+  });
 }
