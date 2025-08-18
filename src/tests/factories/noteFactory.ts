@@ -5,10 +5,11 @@ import { database } from '../../config/postgres';
 import { NoteData } from '../../types/noteType';
 
 export const noteFactory = {
-  createNoteData(): NoteData {
+  createNoteData(override: Partial<NoteData> = {}): NoteData {
     return {
       title: faker.lorem.words(3),
       text: faker.lorem.paragraph().slice(0, 1000),
+      ...override,
     };
   },
 
