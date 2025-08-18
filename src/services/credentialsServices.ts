@@ -1,67 +1,44 @@
 import { throwErrorMessage } from '../middlewares/errorHandlerMiddleware';
 import * as credentialRepository from '../repositories/credentialsRepository';
 import { CredentialData } from '../types/credentialType';
-import { cryptographsGeneralPasswords, decryptsPassword } from '../utils/passwordEncryption';
-
+import { encryptPassword, decryptPassword } from '../utils/passwordEncryption';
 
 async function createCredential(credential: CredentialData, userId: number) {
-  const moreThanOneTitle = await credentialRepository.findMoreThanOneTitle(userId, credential.title);
-
-  if (moreThanOneTitle) {
-    throw throwErrorMessage('conflict', 'You already have a credential with this title');
-  }
-
-  const encryptedPassword = cryptographsGeneralPasswords(credential.password);
-
+  const credentialWithSameTitle = await credentialRepository.findCredentialTitleByUser(userId, credential.title);
+  if (credentialWithSameTitle) throw throwErrorMessage('conflict', 'Credential with this title already exists');
+  const encryptedPassword = encryptPassword(credential.password);
   await credentialRepository.createCredential({ ...credential, password: encryptedPassword }, userId);
 }
 
 async function getUserCredentials(userId: number) {
-  const allUserCredentials = await credentialRepository.getUserCredentials(userId);
-
-  if (!allUserCredentials) {
-    throw throwErrorMessage('not_found', 'No credentials were found');
-  }
-
-  const decryptedCredentials = allUserCredentials.map((credential) => {
-    return {
-      ...credential,
-      password: decryptsPassword(credential.password),
-    };
+  const userCredentials = await credentialRepository.getUserCredentials(userId);
+  if (userCredentials.length === 0) throw throwErrorMessage('not_found', 'No credentials were found');
+  const decryptedCredentials = userCredentials.map((credential) => {
+    return { ...credential, password: decryptPassword(credential.password) };
   });
-
   return decryptedCredentials;
 }
 
-async function getCredendtialById(userId: number, credentialId: number) {
-  const specificCredential = await credentialRepository.getCredendtialById(credentialId);
-
-  if (!specificCredential) {
-    throw throwErrorMessage('not_found', "It seems that this credential doesn't exist yet");
-  }
-
-  if (specificCredential.userId !== userId) {
-    throw throwErrorMessage('forbidden', "You don't have the permition to see this credential");
-  }
-
-  const decryptedPassword = decryptsPassword(specificCredential.password);
-  const decryptedCredential = { ...specificCredential, password: decryptedPassword };
-
+async function getCredentialById(userId: number, credentialId: number) {
+  const credential = await credentialRepository.getCredentialById(credentialId);
+  if (!credential) throw throwErrorMessage('not_found', "Credential doesn't exist");
+  if (credential.userId !== userId) throw throwErrorMessage('forbidden', 'You do not have permission to see this credential');
+  const decryptedCredential = { ...credential, password: decryptPassword(credential.password) };
   return decryptedCredential;
 }
 
 async function deleteCredential(userId: number, credentialId: number) {
-  const credentialForDelection = await credentialRepository.getCredendtialById(credentialId);
-
-  if (!credentialForDelection) {
-    throw throwErrorMessage('not_found', "This credential doesn't exist");
-  }
-
-  if (credentialForDelection.userId !== userId) {
-    throw throwErrorMessage('forbidden', "You don't have the permition to delete this credential");
-  }
-
-  await credentialRepository.deleteCredential(credentialForDelection.id);
+  const credential = await credentialRepository.getCredentialById(credentialId);
+  if (!credential) throw throwErrorMessage('not_found', "Credential doesn't exist");
+  if (credential.userId !== userId) throw throwErrorMessage('forbidden', 'You do not have permission to delete this credential');
+  await credentialRepository.deleteCredential(credential.id);
 }
 
-export { createCredential, getUserCredentials, getCredendtialById, deleteCredential };
+async function updateCredential(userId: number, credentialId: number, credentialData: CredentialData) {
+  const credential = await credentialRepository.getCredentialById(credentialId);
+  if (!credential) throw throwErrorMessage('not_found', "Credential doesn't exist");
+  if (credential.userId !== userId) throw throwErrorMessage('forbidden', 'You do not have permission to update this credential');
+  await credentialRepository.updateCredential(credential.id, credentialData);
+}
+
+export { createCredential, getUserCredentials, getCredentialById, deleteCredential, updateCredential };
