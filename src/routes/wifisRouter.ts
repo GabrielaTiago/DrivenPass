@@ -159,18 +159,6 @@ wifiRouter.get('/wifi/all', validateToken, getUserWifi);
  *                   type: string
  *                   description: Error message
  *             example:
- *               message: "JWT token is required or invalid"
- *       403:
- *         description: Wifi doesn't belong to the user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Error message
- *             example:
  *               message: "You don't have permission to perform this action"
  *       404:
  *         description: Wifi doesn't exist
