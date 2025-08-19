@@ -4,10 +4,9 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY package-lock.json* ./
+COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY prisma ./prisma
 
