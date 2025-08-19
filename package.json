@@ -15,10 +15,9 @@
     "docker:down": "docker-compose down",
     "docker:destroy": "docker-compose down -v --rmi all && docker system prune -f",
     "docker:test": "docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit",
-    "test": "vitest --run src/tests/unit src/tests/integration --coverage",
-    "test:unit": "vitest --run src/tests/unit",
-    "test:integration": "vitest --run src/tests/integration",
-    "test:e2e": "vitest --run src/tests/e2e",
+    "test": "vitest --run --reporter=verbose src/tests/unit src/tests/integration --coverage",
+    "test:unit": "vitest --run --reporter=verbose src/tests/unit",
+    "test:integration": "vitest --run --reporter=verbose src/tests/integration",
     "test:coverage": "vitest --coverage --run",
     "test:ui": "vitest --ui"
   },
