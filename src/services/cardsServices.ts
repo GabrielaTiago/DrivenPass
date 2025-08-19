@@ -52,6 +52,6 @@ export function decryptCard(card: Card) {
 export async function validateCardAccess(userId: number, cardId: number) {
   const card = await cardsRepository.getCardById(cardId);
   if (!card) throw throwErrorMessage('not_found', "Card doesn't exist");
-  if (card.userId !== userId) throw throwErrorMessage('forbidden', "You don't have the permission to perform this action");
+  if (card.userId !== userId) throw throwErrorMessage('forbidden', "You don't have permission to perform this action");
   return card;
 }
