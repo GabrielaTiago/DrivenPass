@@ -8,8 +8,8 @@ export const cardFactory = {
   createCardData(override: Partial<CardData> = {}): CardData {
     return {
       nickname: faker.lorem.word().slice(0, 20),
-      printedName: faker.person.fullName().toUpperCase().slice(0, 50),
-      number: faker.finance.creditCardNumber().slice(0, 16),
+      printedName: faker.person.firstName().toUpperCase().replace(/[^A-Z\s]/g, ' '),
+      number: faker.finance.creditCardNumber('visa').replace(/-/g, '').slice(0, 16).padEnd(16, '0'),
       cvv: faker.finance.creditCardCVV().slice(0, 3),
       expirationDate: `${faker.date.future().getMonth() + 1}`.padStart(2, '0') + '/' + faker.date.future().getFullYear().toString().slice(-2),
       password: faker.number.int({ min: 1000, max: 9999 }).toString(),
