@@ -1,22 +1,17 @@
-FROM node:20-bookworm
+FROM node:20-slim
 
 WORKDIR /usr/src/app
 
-# Instalar dependências
-COPY package.json ./
-RUN npm install
+COPY package*.json ./
 
-# Copiar schema do Prisma
+RUN npm ci
+
 COPY prisma ./prisma
 
-# Gerar cliente Prisma
 RUN npx prisma generate
 
-# Copiar código fonte
 COPY . .
 
-# Expor porta
 EXPOSE 4000
 
-# Comando para executar testes com coverage
-CMD ["npm", "run", "test:coverage"]
+CMD ["npm", "run", "test"]
