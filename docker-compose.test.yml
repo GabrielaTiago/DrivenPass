@@ -11,6 +11,11 @@ services:
       - '5433:5432'
     volumes:
       - pgdata_test:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   drivenpass-test-api:
     build:
@@ -19,7 +24,8 @@ services:
     container_name: drivenpass-test-api
     restart: 'no'
     depends_on:
-      - drivenpass-test-db
+      drivenpass-test-db:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@drivenpass-test-db:5432/${POSTGRES_DB:-drivenpass_test}
       PORT: ${PORT:-4000}
@@ -31,7 +37,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run test
+    command: sh -c "npx prisma migrate deploy && npm run test"
 
 volumes:
   pgdata_test:
